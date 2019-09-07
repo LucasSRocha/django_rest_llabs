@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  # Postgres
+  api_db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=api_db
+
+  api_web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./luizalabs:/luizalabs
+    ports:
+      - "8000:8000"
+    links:
+      - api_db
+    depends_on:
+      - api_db
