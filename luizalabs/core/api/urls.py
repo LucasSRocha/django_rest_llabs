@@ -13,13 +13,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path
-from django.urls import include
-from django.contrib import admin
-from rest_framework_jwt.views import obtain_jwt_token
+from django.urls import re_path
+
+from .views import UserMagaluRudView
+from .views import UserMagaluAPIView
+
+app_name = 'core'
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/magalu/', include('core.api.urls', namespace='api-core')),
-    path('api/auth/login/', obtain_jwt_token, name='api-login'),
+    re_path(r'^$', UserMagaluAPIView.as_view(), name='post-listcreate'),
+    re_path(r'^(?P<pk>\d+)/$', UserMagaluRudView.as_view(), name='UserMagalu-RUD'),
 ]
+
+
