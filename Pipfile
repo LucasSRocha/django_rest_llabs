@@ -9,6 +9,8 @@ verify_ssl = true
 djangorestframework = "==3.10.3"
 Django = ">=2.2.5"
 psycopg2 = "==2.7.3"
+djangorestframework-jwt = "*"
+requests-cache = "*"
 
 [requires]
 python_version = "3.6"
