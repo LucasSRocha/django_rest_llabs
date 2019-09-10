@@ -16,7 +16,7 @@ import requests_cache
 # Setting defining cache usage for python-requests module
 requests_cache.install_cache(cache_name='products_cache',
                              backend='sqlite',
-                             expire_after=1800)
+                             expire_after=60)
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -34,6 +34,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'core.UserMagalu'
 
 # Application definition
 
@@ -64,6 +65,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
 }
 

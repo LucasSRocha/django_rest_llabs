@@ -1,44 +1,26 @@
-from django.db.models import Q
+from rest_framework import viewsets
 
-from rest_framework import mixins
-from rest_framework import generics
-
+from core.models import Product
+from core.models import WishList
 from core.models import UserMagalu
-from .permissions import IsOwnerOrReadOnly
+
+from .serializers import ProductSerializer
+from .serializers import WishListSerializer
 from .serializers import UserMagaluSerializer
 
+from .permissions import IsOwnerOrReadOnly
 
-class UserMagaluAPIView(mixins.CreateModelMixin, generics.ListAPIView):
-    lookup_field = 'pk'  # slug, id # url(r'?P<pk>\d+')
+
+class UserMagaluAPIView(viewsets.ModelViewSet):
+    queryset = UserMagalu.objects.all()
     serializer_class = UserMagaluSerializer
 
-    def get_queryset(self):
-        query_set = UserMagalu.objects.all()
-        query_string = self.request.GET.get("q")
-        if query_string is not None:
-            query_set = query_set.filter(
-                    Q(title__icontains=query_string)|
-                    Q(content__icontains=query_string)
-                    ).distinct()
-        return query_set
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def get_serializer_context(self, *args, **kwargs):
-        return {"request": self.request}
+class WishListAPIView(viewsets.ModelViewSet):
+    queryset = WishList.objects.all()
+    serializer_class = WishListSerializer
 
 
-class UserMagaluRudView(generics.RetrieveUpdateDestroyAPIView):
-    lookup_fields = 'pk'  # slug, id # url(r'?P<pk>\d+')
-    serializer_classs = UserMagaluSerializer
-    permission_classess = [IsOwnerOrReadOnly]
-
-    def get_queryset(self):
-        return UserMagalu.objects.all()
-
-    def get_serializer_context(self, *args, **kwargs):
-        return {"request": self.request}
+class ProductAPIView(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer

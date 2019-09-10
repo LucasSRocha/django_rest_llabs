@@ -1,25 +1,73 @@
 from django.db import models
-from django.conf import settings
+from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import BaseUserManager
 
-# class User(AbstractUserModel):
+
+class UserMagaluManager(BaseUserManager):
+
+    def _create_user(self, username, email, is_staff, is_superuser):
+        if not email:
+            raise ValueError('The given username must be set')
+        email = self.normalize_email(email)
+        user = self.model(username=username, email=email,
+                          is_staff=is_staff, is_superuser=is_superuser)
+
+        user.set_password(username)
+
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, username, email):
+        return self._create_user(username, email, False, False,)
+
+    def create_superuser(self, username, email):
+        user = self._create_user(username, email, True, True,)
+        user.is_active = True
+        user.save(using=self._db)
+        return user
 
 
-class UserMagalu(models.Model):
-    title = models.CharField(max_length=120, null=True, blank=True)
-    content = models.TextField(max_length=120, null=True, blank=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
+class UserMagalu(AbstractBaseUser):
+    username = models.CharField(max_length=254)
+    email = models.EmailField(max_length=254, unique=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
+    objects = UserMagaluManager()
 
     def __str__(self):
-        return str(self.user.username)
+        return self.email
 
     @property
     def owner(self):
-        return self.user
+        return self.email
+
+    class Meta:
+        verbose_name = "Usuario Magalu"
+        verbose_name_plural = "Usuarios Magalu"
 
 
 class WishList(models.Model):
-    product_id = models.CharField(max_length=100, blank=False, null=False, unique=True)
-    user = models.ManyToManyField(UserMagalu)
+    wishlist_name = models.CharField(max_length=254, blank=True, null=True)
+    magalu_user = models.OneToOneField(UserMagalu, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.product_id
+        return self.wishlist_name
+
+    class Meta:
+        verbose_name = "WishList"
+        verbose_name_plural = "WishLists"
+
+
+class Product(models.Model):
+    wishlist = models.ForeignKey(WishList, on_delete=models.CASCADE)
+    product_name = models.CharField(max_length=254, blank=True, null=True)
+    product_id = models.CharField(max_length=254)
+
+    def __str__(self):
+        return self.product_name if self.product_name else self.product_id
+
+    class Meta:
+        verbose_name = "Product"
+        verbose_name_plural = "Products"
