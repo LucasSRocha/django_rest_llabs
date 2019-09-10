@@ -1,27 +1,38 @@
-from core.models import UserMagalu
 from rest_framework import serializers
 
+from core.models import Product
+from core.models import WishList
+from core.models import UserMagalu
 
-class UserMagaluSerializer(serializers.ModelSerializer): # forms.ModelForm
+
+class UserMagaluSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserMagalu
         fields = [
             'id',
-            'user',
-            'title',
-            'content',
-            'timestamp',
+            'name',
+            'email',
         ]
-        read_only_fields = ['id', 'user']
 
-    # converts to JSON
-    # validations for data passed
+        read_only_fields = ['id']
+        required = ['name', 'email']
 
-    def validate_title(self, value):
-        query_set = UserMagalu.objects.filter(title__iexact=value)  # including instance
-        if self.instance:
-            query_set = query_set.exclude(pk=self.instance.pk)
-        if query_set.exists():
-            raise serializers.ValidationError("This title has already been used")
-        return value
+
+class WishListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = WishList
+        fields = '__all__'
+
+        read_only_fields = ['magalu_user']
+        required = ['magalu_user']
+
+
+class ProductSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+        required = ['product_id', 'wishlist']

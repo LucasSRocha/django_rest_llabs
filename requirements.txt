@@ -1,13 +1,12 @@
 certifi==2019.6.16
 chardet==3.0.4
-Django==2.2.5
-djangorestframework==3.10.3
+django==2.1.12
 djangorestframework-jwt==1.11.0
+djangorestframework==3.10.3
 idna==2.8
 psycopg2==2.7.3
-PyJWT==1.7.1
+pyjwt==1.7.1
 pytz==2019.2
-requests==2.22.0
 requests-cache==0.5.2
-sqlparse==0.3.0
+requests==2.22.0
 urllib3==1.25.3

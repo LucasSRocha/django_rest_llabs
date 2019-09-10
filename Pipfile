@@ -7,7 +7,7 @@ verify_ssl = true
 
 [packages]
 djangorestframework = "==3.10.3"
-Django = ">=2.2.5"
+Django = "==2.1.12"
 psycopg2 = "==2.7.3"
 djangorestframework-jwt = "*"
 requests-cache = "*"
