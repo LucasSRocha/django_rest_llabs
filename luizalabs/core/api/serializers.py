@@ -11,12 +11,22 @@ class UserMagaluSerializer(serializers.ModelSerializer):
         model = UserMagalu
         fields = [
             'id',
-            'name',
+            'username',
             'email',
         ]
 
         read_only_fields = ['id']
-        required = ['name', 'email']
+        required = ['username', 'email']
+
+
+class UserMagaluSerializerReadOnly(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserMagalu
+        fields = [
+            'id',
+            'username',
+        ]
 
 
 class WishListSerializer(serializers.ModelSerializer):
