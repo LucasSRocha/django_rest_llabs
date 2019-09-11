@@ -23,7 +23,7 @@ class UserMagaluManager(BaseUserManager):
         return user
 
     def create_user(self, username, email):
-        return self._create_user(username, email, False, False,)
+        return self._create_user(username, email, None, False, False)
 
     def create_superuser(self, username, email, password):
         user = self._create_user(username, email, password, True, True,)
@@ -33,12 +33,17 @@ class UserMagaluManager(BaseUserManager):
 
 
 class UserMagalu(AbstractBaseUser, PermissionsMixin):
+
     username = models.CharField(max_length=254)
+
     email = models.EmailField(max_length=254, unique=True)
+
     is_staff = models.BooleanField(default=False)
+
     is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
+
     REQUIRED_FIELDS = ['username']
 
     objects = UserMagaluManager()
@@ -48,11 +53,14 @@ class UserMagalu(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         verbose_name = "Usuario Magalu"
+
         verbose_name_plural = "Usuarios Magalu"
 
 
 class WishList(models.Model):
+
     wishlist_name = models.CharField(max_length=254, blank=True, null=True)
+
     magalu_user = models.OneToOneField(UserMagalu, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -60,6 +68,7 @@ class WishList(models.Model):
 
     class Meta:
         verbose_name = "WishList"
+
         verbose_name_plural = "WishLists"
 
     @property
@@ -68,8 +77,11 @@ class WishList(models.Model):
 
 
 class Product(models.Model):
+
     wishlist = models.ForeignKey(WishList, on_delete=models.CASCADE)
+
     product_name = models.CharField(max_length=254, blank=True, null=True)
+
     product_id = models.CharField(max_length=254)
 
     def __str__(self):
@@ -77,7 +89,10 @@ class Product(models.Model):
 
     class Meta:
         verbose_name = "Product"
+
         verbose_name_plural = "Products"
+
+        unique_together = ['wishlist', 'product_id']
 
     @property
     def owner(self):
