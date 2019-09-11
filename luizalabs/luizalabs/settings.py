@@ -16,7 +16,7 @@ import requests_cache
 # Setting defining cache usage for python-requests module
 requests_cache.install_cache(cache_name='products_cache',
                              backend='sqlite',
-                             expire_after=60)
+                             expire_after=120)
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

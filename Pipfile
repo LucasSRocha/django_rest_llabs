@@ -11,6 +11,7 @@ Django = "==2.1.12"
 psycopg2 = "==2.7.3"
 djangorestframework-jwt = "*"
 requests-cache = "*"
+aiohttp = "*"
 
 [requires]
 python_version = "3.6"
