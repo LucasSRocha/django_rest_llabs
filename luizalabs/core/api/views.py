@@ -1,3 +1,5 @@
+import json
+
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -48,7 +50,7 @@ class UserMagaluAPIView(viewsets.ViewSet):
         serializer = UserMagaluSerializer(data=request.data)
 
         if serializer.is_valid():
-            user = UserMagalu.objects.create_user(username=serializer.validated_data.get('username'),
+            UserMagalu.objects.create_user(username=serializer.validated_data.get('username'),
                                                   email=serializer.validated_data.get('email'))
 
             return Response(serializer.data, status.HTTP_201_CREATED)
@@ -129,16 +131,18 @@ class WishListAPIView(viewsets.ViewSet):
 
     def create(self, request):
 
-        serializer = WishListSerializer(data=request.data)
+        data = {"magalu_user": request.user.pk, "wishlist_name": request.data.get('wishlist_name')}
+
+        serializer = WishListSerializer(data=data)
 
         if serializer.is_valid():
 
-            WishList.objects.create_user(wishlist_name=serializer.validated_data.get('wishlist_name'),
-                                         magalu_user=serializer.validated_data.get('magalu_user'))
+            WishList.objects.create(wishlist_name=serializer.validated_data.get('wishlist_name'),
+                                    magalu_user=serializer.validated_data.get('magalu_user'))
 
             return Response(serializer.data, status.HTTP_201_CREATED)
 
-        return Response({f'O Usuário já possui uma lista de favoritos!'}, status.HTTP_403_FORBIDDEN)
+        return Response({f'The User already have a WishList!'}, status.HTTP_403_FORBIDDEN)
 
     def retrieve(self, request, pk=None):
 
@@ -174,7 +178,7 @@ class WishListAPIView(viewsets.ViewSet):
 
             wishlist.delete()
 
-            return Response({'WishList Deletada'}, status.HTTP_200_OK)
+            return Response({'WishList deleted'}, status.HTTP_200_OK)
 
         except UserMagalu.DoesNotExist:
             return Response({'Object does not exists.'}, status.HTTP_404_NOT_FOUND)
@@ -208,7 +212,11 @@ class ProductAPIView(viewsets.ViewSet):
 
         if check_product_existence(request.data.get('product_id')):
 
-            serializer = ProductSerializer(data=request.data)
+            data = {"product_name": request.data.get("product_name"),
+                    "product_id": request.data.get("product_id"),
+                    "wishlist": WishList.objects.filter(magalu_user=request.user).last().pk}
+
+            serializer = ProductSerializer(data=data)
 
             if serializer.is_valid():
 
@@ -218,9 +226,9 @@ class ProductAPIView(viewsets.ViewSet):
 
                 return Response(serializer.data, status.HTTP_201_CREATED)
 
-            return Response({'Produto já existe na WishList'}, status.HTTP_403_FORBIDDEN)
+            return Response({f'The Product already exists in the Wishlist'}, status.HTTP_403_FORBIDDEN)
 
-        return Response({'O Produto não existe'}, status.HTTP_403_FORBIDDEN)
+        return Response({'The product does not exists'}, status.HTTP_403_FORBIDDEN)
 
     def retrieve(self, request, pk=None):
 
@@ -236,22 +244,24 @@ class ProductAPIView(viewsets.ViewSet):
 
     def update(self, request, pk=None):
 
-        try:
-            product = Product.objects.get(pk=pk)
+        if check_product_existence(request.data.get('product_id')):
+            try:
+                product = Product.objects.get(pk=pk)
 
-            serializer = ProductSerializer(product, data=request.data)
+                serializer = ProductSerializer(product, data=request.data)
 
-            if serializer.is_valid():
-                product.product_name = serializer.validated_data.get('product_name')
+                if serializer.is_valid():
+                    product.product_name = serializer.validated_data.get('product_name')
 
-                product.product_id = serializer.validated_data.get('product_id')
+                    product.product_id = serializer.validated_data.get('product_id')
 
-                product.save()
+                    product.save()
 
-                return Response(serializer.data, status.HTTP_200_OK)
+                    return Response(serializer.data, status.HTTP_200_OK)
 
-        except UserMagalu.DoesNotExist:
-            return Response({'Object does not exists.'}, status.HTTP_404_NOT_FOUND)
+            except UserMagalu.DoesNotExist:
+                return Response({'Object does not exists.'}, status.HTTP_404_NOT_FOUND)
+        return Response({'Object does not exists.'}, status.HTTP_404_NOT_FOUND)
 
     def destroy(self, request, pk=None):
 
@@ -260,7 +270,7 @@ class ProductAPIView(viewsets.ViewSet):
 
             product.delete()
 
-            return Response({'Produto Deletada'}, status.HTTP_200_OK)
+            return Response({'Product deleted'}, status.HTTP_200_OK)
 
         except Product.DoesNotExist:
             return Response({'Object does not exists.'}, status.HTTP_404_NOT_FOUND)

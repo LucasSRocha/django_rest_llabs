@@ -24,14 +24,3 @@ router.register(r'usermagalu', UserMagaluAPIView)
 router.register(r'wishlist', WishListAPIView)
 router.register(r'product', ProductAPIView)
 
-# <URLPattern '^usermagalu/$' [name='usermagalu-list']>
-# api_web_1  |
-# api_web_1  | <URLPattern '^usermagalu\.(?P<format>[a-z0-9]+)/?$' [name='usermagalu-list']>
-# api_web_1  |
-# api_web_1  | <URLPattern '^usermagalu/(?P<pk>[^/.]+)/$' [name='usermagalu-detail']>
-# api_web_1  |
-# api_web_1  | <URLPattern '^usermagalu/(?P<pk>[^/.]+)\.(?P<format>[a-z0-9]+)/?$' [name='usermagalu-detail']>
-# api_web_1  |
-# api_web_1  | <URLPattern '^$' [name='api-root']>
-# api_web_1  |
-# api_web_1  | <URLPattern '^\.(?P<format>[a-z0-9]+)/?$' [name='api-root']>
