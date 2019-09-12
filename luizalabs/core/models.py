@@ -9,11 +9,11 @@ class UserMagaluManager(BaseUserManager):
 
     def _create_user(self, username, email, password, is_staff, is_superuser):
         if not email:
-            raise ValueError('The given username must be set')
+            raise ValueError('The given email must be set')
         email = self.normalize_email(email)
         user = self.model(username=username,
                           email=email,
-                          password=password if password else username,
+                          password=password,
                           is_staff=is_staff,
                           is_superuser=is_superuser)
 
@@ -23,7 +23,7 @@ class UserMagaluManager(BaseUserManager):
         return user
 
     def create_user(self, username, email):
-        return self._create_user(username, email, None, False, False)
+        return self._create_user(username, email, username, False, False)
 
     def create_superuser(self, username, email, password):
         user = self._create_user(username, email, password, True, True,)

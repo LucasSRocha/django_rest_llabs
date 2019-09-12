@@ -39,10 +39,6 @@ class WishListSerializer(serializers.ModelSerializer):
 
         fields = '__all__'
 
-        read_only_fields = ['magalu_user']
-
-        required = ['magalu_user']
-
 
 class ProductSerializer(serializers.ModelSerializer):
 
@@ -50,5 +46,3 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
 
         fields = '__all__'
-
-        required = ['product_id', 'wishlist']
