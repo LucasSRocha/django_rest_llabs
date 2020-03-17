@@ -3,7 +3,7 @@ async-timeout==3.0.1
 attrs==19.1.0
 certifi==2019.6.16
 chardet==3.0.4
-django==2.1.12
+django==2.2.10
 djangorestframework-jwt==1.11.0
 djangorestframework==3.10.3
 idna-ssl==1.1.0 ; python_version < '3.7'
