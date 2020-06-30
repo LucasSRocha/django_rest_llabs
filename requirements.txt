@@ -7,7 +7,7 @@ django==2.1.12
 djangorestframework-jwt==1.11.0
 djangorestframework==3.10.3
 idna-ssl==1.1.0 ; python_version < '3.7'
-idna==2.8
+idna==2.10
 multidict==4.5.2
 psycopg2==2.7.3
 pyjwt==1.7.1
