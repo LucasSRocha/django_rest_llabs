@@ -11,7 +11,7 @@ idna==2.8
 multidict==4.5.2
 psycopg2==2.7.3
 pyjwt==1.7.1
-pytz==2019.2
+pytz==2020.4
 requests-cache==0.5.2
 requests==2.22.0
 typing-extensions==3.7.4 ; python_version < '3.7'
